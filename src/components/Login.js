@@ -1,42 +1,55 @@
+// components/Login.js
 import React, { useState } from 'react';
-import { Form, Button } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom';
+import { Form, Button, Alert } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom'; // Importe useNavigate para redirecionar
 
 const Login = ({ onLogin }) => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const navigate = useNavigate();
+  const [email, setEmail] = useState('');
+  const [senha, setSenha] = useState('');
+  const [erro, setErro] = useState('');
+  const navigate = useNavigate(); // Hook para redirecionamento
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onLogin(username); // Chama a função de login passada como prop
-    navigate('/home'); // Redireciona para a página inicial após o login
+
+    // Validação simples
+    if (email === 'admin@example.com' && senha === '123456') {
+      setErro(''); // Limpa o erro
+      onLogin(email); // Chama a função de login passada como prop
+      navigate('/clientes'); // Redireciona para a página de clientes
+    } else {
+      setErro('Credenciais inválidas.'); // Exibe mensagem de erro
+    }
   };
 
   return (
     <Form onSubmit={handleSubmit}>
-      <Form.Group controlId="formUsername">
-        <Form.Label>Usuário</Form.Label>
+      <Form.Group controlId="email">
+        <Form.Label>Email</Form.Label>
         <Form.Control
-          type="text"
-          placeholder="Digite o usuário"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
+          type="email"
+          placeholder="Digite seu email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
         />
       </Form.Group>
 
-      <Form.Group controlId="formPassword">
+      <Form.Group controlId="senha">
         <Form.Label>Senha</Form.Label>
         <Form.Control
           type="password"
-          placeholder="Digite a senha"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          placeholder="Digite sua senha"
+          value={senha}
+          onChange={(e) => setSenha(e.target.value)}
+          required
         />
       </Form.Group>
 
+      {erro && <Alert variant="danger">{erro}</Alert>}
+
       <Button variant="primary" type="submit">
-        Login
+        Entrar
       </Button>
     </Form>
   );
